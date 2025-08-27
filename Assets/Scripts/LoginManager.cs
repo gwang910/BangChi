@@ -20,6 +20,8 @@ public class LoginManager : MonoBehaviour
     [Header("Style")]
     public Font baeminFont;
 
+    public GameObject optionWindow;  // 옵션창 패널
+
     void Awake()
     {
         loginButton.onClick.AddListener(OnClickLogin);
@@ -29,6 +31,7 @@ public class LoginManager : MonoBehaviour
         // 입력칸 스타일/동작 준비
         PrepareInput(idField, isPassword: false);
         PrepareInput(pwField, isPassword: true);
+        optionWindow.SetActive(false); // 시작 시 닫힘 상태
 
         UserDatabase.EnsureReady(); // 첫 실행 준비
     }
@@ -106,7 +109,8 @@ public class LoginManager : MonoBehaviour
 
     void OnClickOption()
     {
-        ShowMsg("옵션 열기(미구현)");
+        bool isActive = optionWindow.activeSelf;
+        optionWindow.SetActive(!isActive); // 열려 있으면 닫고, 닫혀 있으면 열기
     }
 
     void PrepareInput(InputField f, bool isPassword)
