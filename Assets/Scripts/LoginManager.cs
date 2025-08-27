@@ -1,23 +1,34 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using UnityEngine.SceneManagement;
 
 public class LoginManager : MonoBehaviour
 {
-    public TMP_InputField idField;
-    public TMP_InputField pwField;
+    [Header("Fields (Legacy)")]
+    public InputField idField;
+    public InputField pwField;
+
+    [Header("Buttons")]
     public Button loginButton;
     public Button makeIdButton;
     public Button optionButton;
-    public TextMeshProUGUI messageText;
+
+    [Header("Texts (Legacy)")]
+    public Text messageText;
+
+    [Header("Style")]
+    public Font baeminFont;
 
     void Awake()
     {
         loginButton.onClick.AddListener(OnClickLogin);
         makeIdButton.onClick.AddListener(OnClickMakeId);
         optionButton.onClick.AddListener(OnClickOption);
+
+        // 입력칸 스타일/동작 준비
+        PrepareInput(idField, isPassword: false);
+        PrepareInput(pwField, isPassword: true);
 
         UserDatabase.EnsureReady(); // 첫 실행 준비
     }
@@ -44,8 +55,8 @@ public class LoginManager : MonoBehaviour
         string id = idField.text.Trim();
         string pw = pwField.text;
 
-        if (string.IsNullOrEmpty(id)) { ShowMsg("ID를 입력하세요."); idField.ActivateInputField(); return; }
-        if (string.IsNullOrEmpty(pw)) { ShowMsg("비밀번호를 입력하세요."); pwField.ActivateInputField(); return; }
+        if (string.IsNullOrEmpty(id)) { ShowMsg("ID를 입력하세요."); idField.Select(); idField.ActivateInputField(); return; }
+        if (string.IsNullOrEmpty(pw)) { ShowMsg("비밀번호를 입력하세요."); pwField.Select(); pwField.ActivateInputField(); return; }
 
         SetInteractable(false);
         StartCoroutine(CoLogin(id, pw));
@@ -68,6 +79,7 @@ public class LoginManager : MonoBehaviour
         {
             ShowMsg("ID 또는 비밀번호가 올바르지 않습니다.");
             pwField.text = "";
+            pwField.Select();
             pwField.ActivateInputField();
             SetInteractable(true);
         }
@@ -96,4 +108,63 @@ public class LoginManager : MonoBehaviour
     {
         ShowMsg("옵션 열기(미구현)");
     }
+
+    void PrepareInput(InputField f, bool isPassword)
+    {
+        // 텍스트 컴포넌트(내용 표시용)
+        var tc = f.textComponent;                  // (Legacy) Text
+        if (tc != null)
+        {
+            if (baeminFont) tc.font = baeminFont;  // 폰트 지정
+            tc.alignment = TextAnchor.MiddleLeft;  // 왼쪽 정렬 강제
+            tc.supportRichText = false;            // 리치텍스트 비사용
+            tc.resizeTextForBestFit = false;       // 자동 크기 OFF(줄바꿈/정렬 꼬임 방지)
+            if (tc.color.a < 0.99f) tc.color = new Color(tc.color.r, tc.color.g, tc.color.b, 1f); // 투명 방지
+        }
+
+        // 플레이스홀더
+        var ph = f.placeholder as Text;            // (Legacy) Text
+        if (ph != null)
+        {
+            if (baeminFont) ph.font = baeminFont;
+            ph.alignment = TextAnchor.MiddleLeft;
+            var c = ph.color; c.a = 0.5f; ph.color = c;  // 반투명
+            ph.supportRichText = false;
+            ph.resizeTextForBestFit = false;
+        }
+
+        // 입력 필드 동작
+        f.lineType = InputField.LineType.SingleLine;
+        f.textComponent.horizontalOverflow = HorizontalWrapMode.Overflow; // 가로 스크롤 허용
+        f.textComponent.verticalOverflow = VerticalWrapMode.Truncate;
+
+        if (isPassword)
+        {
+            f.contentType = InputField.ContentType.Password;
+            f.asteriskChar = '?'; // 폰트에 '?' 글리프가 없으면 '*'로 바꾸세요.
+        }
+        else
+        {
+            f.contentType = InputField.ContentType.Standard;
+        }
+
+        // 커서/선택 색(가시성)
+        f.caretBlinkRate = 0.85f;
+        f.caretColor = new Color(0, 0, 0, 1);
+        f.selectionColor = new Color(0.25f, 0.5f, 1f, 0.35f);
+    }
+
+    void WireClickToFocus(Graphic clickable, InputField target)
+    {
+        if (clickable == null || target == null) return;
+        var btn = clickable.GetComponent<Button>();
+        if (btn == null) btn = clickable.gameObject.AddComponent<Button>();
+        btn.transition = Selectable.Transition.None; // 시각효과 불필요하면 None
+        btn.onClick.AddListener(() =>
+        {
+            target.Select();
+            target.ActivateInputField();
+        });
+    }
+
 }

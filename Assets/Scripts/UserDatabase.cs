@@ -23,7 +23,7 @@ public static class UserDatabase
 {
     private static string FileName => "users.json";
     private static string SrcPath => Path.Combine(Application.streamingAssetsPath, FileName);
-    private static string DbPath => Path.Combine(Application.persistentDataPath, FileName);
+    private static string DbPath  => Path.Combine(Application.persistentDataPath, FileName);
 
     private static UserDbModel _cache;
 
