@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Stage_2
   m_EditorClassIdentifier: 
   stageNumber: 1
-  enemyPrefab: {fileID: 0}
+  enemyPrefab: {fileID: 7953549181026892944, guid: bd721086761a0db48815512cf0fd5556, type: 3}
   expPerKill: 20
-  goldPerKill: 5
-  expToNext: 100
+  goldPerKill: 30
+  expToNext: 400

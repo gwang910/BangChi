@@ -117,6 +117,8 @@ GameObject:
   - component: {fileID: 4491989012738923563}
   - component: {fileID: 9113013033995667834}
   - component: {fileID: 6669334882057195651}
+  - component: {fileID: -474318627576251962}
+  - component: {fileID: -3429341663609962694}
   m_Layer: 7
   m_Name: EnemyLv1
   m_TagString: Untagged
@@ -190,3 +192,34 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &-474318627576251962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8043955290140471233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20065c79eeb7c2d4c88541ed4079498e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 100
+  currentHP: 100
+--- !u!114 &-3429341663609962694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8043955290140471233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 148499e4758c4df479e00f9c35c9f2f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectRange: 12
+  attackRange: 2.2
+  moveSpeed: 3.2
+  damage: 5
+  attackInterval: 1
