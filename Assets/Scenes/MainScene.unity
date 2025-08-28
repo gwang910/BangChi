@@ -923,6 +923,7 @@ GameObject:
   - component: {fileID: 877737310}
   - component: {fileID: 877737309}
   - component: {fileID: 877737308}
+  - component: {fileID: 877737311}
   m_Layer: 5
   m_Name: ShopButton
   m_TagString: Untagged
@@ -1032,6 +1033,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 877737306}
   m_CullTransparentMesh: 1
+--- !u!114 &877737311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877737306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4d683c5abb431e4aa6823de983282ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panel: {fileID: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1135,13 +1149,14 @@ GameObject:
   - component: {fileID: 985737481}
   - component: {fileID: 985737483}
   - component: {fileID: 985737482}
+  - component: {fileID: 985737484}
   m_Layer: 5
   m_Name: Status
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &985737481
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1154,8 +1169,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 18150563}
   - {fileID: 50538542}
+  - {fileID: 18150563}
   - {fileID: 1282520525}
   - {fileID: 167284433}
   - {fileID: 1512271159}
@@ -1207,6 +1222,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 985737480}
   m_CullTransparentMesh: 1
+--- !u!114 &985737484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 985737480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7b860b1c6ea5f646b5948eeb6872823, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  idText: {fileID: 18150564}
+  stageText: {fileID: 50538543}
+  hpText: {fileID: 1282520526}
+  mpText: {fileID: 167284434}
+  expText: {fileID: 1512271160}
+  atkText: {fileID: 1467156952}
+  defText: {fileID: 331009735}
+  dexText: {fileID: 1831671327}
 --- !u!1 &1023915279
 GameObject:
   m_ObjectHideFlags: 0
@@ -1287,6 +1322,7 @@ GameObject:
   - component: {fileID: 1140722539}
   - component: {fileID: 1140722538}
   - component: {fileID: 1140722537}
+  - component: {fileID: 1140722540}
   m_Layer: 5
   m_Name: StatusButton
   m_TagString: Untagged
@@ -1357,7 +1393,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1140722538}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1140722540}
+        m_TargetAssemblyTypeName: PanelToggle, Assembly-CSharp
+        m_MethodName: Toggle
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1140722538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1396,6 +1444,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1140722535}
   m_CullTransparentMesh: 1
+--- !u!114 &1140722540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1140722535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4d683c5abb431e4aa6823de983282ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panel: {fileID: 985737480}
 --- !u!1 &1184076750
 GameObject:
   m_ObjectHideFlags: 0
@@ -1507,6 +1568,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1282520524}
   m_CullTransparentMesh: 1
+--- !u!1 &1367249499
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1367249501}
+  - component: {fileID: 1367249500}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1367249500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367249499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b56e4c3350720c447ba22f8accfa59aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  userId: Guest
+  stats:
+    stage: 0
+    hp: 100
+    maxHp: 100
+    mp: 50
+    maxMp: 50
+    exp: 0
+    maxExp: 100
+    atk: 10
+    def: 5
+    dex: 7
+--- !u!4 &1367249501
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367249499}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1371623815
 GameObject:
   m_ObjectHideFlags: 0
@@ -1519,6 +1636,7 @@ GameObject:
   - component: {fileID: 1371623819}
   - component: {fileID: 1371623818}
   - component: {fileID: 1371623817}
+  - component: {fileID: 1371623820}
   m_Layer: 5
   m_Name: InventoryButton
   m_TagString: Untagged
@@ -1628,6 +1746,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1371623815}
   m_CullTransparentMesh: 1
+--- !u!114 &1371623820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371623815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4d683c5abb431e4aa6823de983282ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panel: {fileID: 0}
 --- !u!1 &1423095848
 GameObject:
   m_ObjectHideFlags: 0
@@ -2194,3 +2325,4 @@ SceneRoots:
   - {fileID: 1811994516}
   - {fileID: 1300598275917950745}
   - {fileID: 750788411}
+  - {fileID: 1367249501}
