@@ -27,7 +27,7 @@ public class HUD : MonoBehaviour
     void RefreshAll()
     {
         RefreshHP();
-        if (mpBar) { mpBar.maxValue = GameManager.Instance.playerBase.maxMP; mpBar.value = GameManager.Instance.playerBase.maxMP; } // MP 시스템 추가 시 연동
+        if (mpBar) { mpBar.maxValue = GameManager.Instance.playerBase.maxMP; mpBar.value = GameManager.Instance.playerBase.maxMP; }
         var st = GameManager.Instance.CurStage;
         if (expBar) { expBar.maxValue = st.expToNext; expBar.value = GameManager.Instance.stats.exp; }
         if (stageText) stageText.text = $"Stage {st.stageNumber:00}";

@@ -19,9 +19,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    [Header("Data (optional)")]
+    [Header("Data")]
     public CharacterStatsSO playerBase;     // 기본 스탯 SO
     public StageConfigSO[] stages;          // 스테이지 설정 리스트
+    public EnemySpawner spawner;
 
     [Header("Runtime")]
     public string userId = "Guest";
@@ -202,8 +203,8 @@ public class GameManager : MonoBehaviour
         var st = CurStage;
         if (st && st.enemyPrefab != null)
         {
-            // SpawnManager가 프로젝트에 있다면 호출, 없어도 안전
-            try { SpawnManager.ReplaceEnemies(st.enemyPrefab); }
+            // EnemySpawner가 프로젝트에 있다면 호출, 없어도 안전
+            try { EnemySpawner.ReplaceEnemies(st.enemyPrefab); }
             catch { /* 없으면 무시 */ }
         }
     }
