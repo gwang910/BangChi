@@ -45,7 +45,8 @@ public class EnemySpawner : MonoBehaviour
         Vector3 pos;
         if (!TryGetSpawnPosition(out pos)) return;
 
-        var go = GetFromPool();
+        var go = Instantiate(enemyPrefab, pos + Vector3.up, Quaternion.identity); // »ìÂ¦ À§¿¡¼­
+        SnapToGround(go);
         go.transform.SetPositionAndRotation(pos, Quaternion.identity);
         go.SetActive(true);
 
@@ -57,6 +58,15 @@ public class EnemySpawner : MonoBehaviour
 
         _alive.Add(go);
         _occupied.Add(pos);
+    }
+
+    void SnapToGround(GameObject go)
+    {
+        var start = go.transform.position + Vector3.up * 3f;
+        if (Physics.Raycast(start, Vector3.down, out var hit, 10f, groundMask))
+        {
+            var p = go.transform.position; p.y = hit.point.y; go.transform.position = p;
+        }
     }
 
     bool TryGetSpawnPosition(out Vector3 pos)

@@ -28,11 +28,41 @@ public class GameManager : MonoBehaviour
     public string userId = "Guest";
     public PlayerStats stats = new PlayerStats();
 
+    [Header("Regen")]
+    public float regenInterval = 1.0f;  // 초
+    public int hpRegenPerTick = 7;
+    public int mpRegenPerTick = 3;
+
     public int gold = 0;
 
     public event Action OnStatsChanged;
 
     string _userKeyPrefix => $"{userId}";   // 사용자별 키 prefix
+
+    void Start()
+    {
+        // 씬 안에 이미 Player가 있고 HUD가 구독하기 전에 오버플로를 방지
+        OnStatsChanged?.Invoke();
+        StartCoroutine(CoRegen());
+    }
+
+    System.Collections.IEnumerator CoRegen()
+    {
+        var wait = new WaitForSeconds(regenInterval);
+        while (true)
+        {
+            // HP/MP 주기적인 회복
+            int beforeHp = stats.hp, beforeMp = stats.mp;
+
+            stats.hp = Mathf.Min(stats.maxHp, stats.hp + Mathf.Max(0, hpRegenPerTick));
+            stats.mp = Mathf.Min(stats.maxMp, stats.mp + Mathf.Max(0, mpRegenPerTick));
+
+            if (stats.hp != beforeHp || stats.mp != beforeMp)
+                OnStatsChanged?.Invoke();
+
+            yield return wait;
+        }
+    }
 
     void Awake()
     {
@@ -207,5 +237,10 @@ public class GameManager : MonoBehaviour
             try { EnemySpawner.ReplaceEnemies(st.enemyPrefab); }
             catch { /* 없으면 무시 */ }
         }
+    }
+
+    public void RaiseStatsChanged()
+    {
+        OnStatsChanged?.Invoke();
     }
 }
