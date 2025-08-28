@@ -36,6 +36,40 @@ public class GameManager : MonoBehaviour
     public int gold = 0;
 
     public event Action OnStatsChanged;
+
+    // 사용자별 키
+    string KeyReached => $"{userId}_reachedStage";
+
+    // 현재 유저가 선택할 수 있는 최대 스테이지
+    public int MaxSelectableStage =>
+        Mathf.Max(PlayerPrefs.GetInt(KeyReached, 0), stats.stage);
+
+    // 현재 스테이지를 '도달'로 기록 (클리어/레벨업 시 호출)
+    public void RecordReachedStage(int stage)
+    {
+        int prev = PlayerPrefs.GetInt(KeyReached, 0);
+        if (stage > prev)
+        {
+            PlayerPrefs.SetInt(KeyReached, stage);
+            PlayerPrefs.Save();
+        }
+    }
+
+    // 스테이지 이동(과거 선택용). 미래 스테이지는 막음.
+    public void GoToStage(int targetStage)
+    {
+        int maxAllowed = MaxSelectableStage;
+        int clamped = Mathf.Clamp(targetStage, 0, maxAllowed);
+
+        if (stats.stage == clamped) { RaiseStatsChanged(); return; }
+
+        stats.stage = clamped;
+        stats.exp = 0;                       // 원하면 유지로 바꿔도 됨
+                                             // 스테이지 요구치/적 교체 등 필요 로직
+        RaiseStatsChanged();
+
+    }
+
     public void RaiseStatsChanged() => OnStatsChanged?.Invoke();
 
     string _userKeyPrefix => $"{userId}";   // 사용자별 키 prefix
@@ -165,6 +199,7 @@ public class GameManager : MonoBehaviour
         SaveProgress();
         OnStatsChanged?.Invoke();
         ReplaceEnemiesForCurrentStage();
+        RecordReachedStage(stats.stage);  // 새로 도달한 스테이지 해금
     }
     public void TakeDamage(int dmg)
     {
@@ -175,22 +210,6 @@ public class GameManager : MonoBehaviour
     {
         stats.hp = Mathf.Min(stats.maxHp, stats.hp + Mathf.Max(0, amt));
         OnStatsChanged?.Invoke();
-    }
-
-    public void GoToStage(int targetStage)
-    {
-        // 플레이어가 도달한 최대 스테이지까지 허용
-        int reached = PlayerPrefs.GetInt($"{_userKeyPrefix}_reachedStage", 0);
-        int maxAllowed = Mathf.Max(reached, stats.stage);
-        stats.stage = Mathf.Clamp(targetStage, 0, maxAllowed);
-
-        // 이동 시 경험치는 초기화
-        stats.exp = 0;
-        ClampStageAndExp();
-
-        SaveProgress();
-        OnStatsChanged?.Invoke();
-        ReplaceEnemiesForCurrentStage();
     }
 
     // ====== 저장/로드(사용자별 키) ======
