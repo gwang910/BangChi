@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,31 +7,24 @@ public class HUD : MonoBehaviour
     public Slider hpBar, mpBar, expBar;
     public Text stageText, goldText;
 
-    Health _playerHP;
+    void OnEnable() { StartCoroutine(Bind()); }
+    void OnDisable() { if (GameManager.Instance) GameManager.Instance.OnStatsChanged -= Refresh; }
 
-    void Start()
+    IEnumerator Bind()
     {
-        _playerHP = GameObject.FindGameObjectWithTag("Player").GetComponent<Health>();
-        _playerHP.OnChanged += RefreshHP;
-        GameManager.Instance.OnStatsChanged += RefreshAll;
-
-        RefreshAll();
+        while (GameManager.Instance == null) yield return null;   // 안전 대기
+        GameManager.Instance.OnStatsChanged -= Refresh;           // 중복 방지
+        GameManager.Instance.OnStatsChanged += Refresh;
+        Refresh();                                                // 초기값 즉시 반영
     }
 
-    void RefreshHP()
+    void Refresh()
     {
-        if (!hpBar) return;
-        hpBar.maxValue = _playerHP.maxHP;
-        hpBar.value = _playerHP.currentHP;
-    }
-
-    void RefreshAll()
-    {
-        RefreshHP();
-        if (mpBar) { mpBar.maxValue = GameManager.Instance.playerBase.maxMP; mpBar.value = GameManager.Instance.playerBase.maxMP; }
-        var st = GameManager.Instance.CurStage;
-        if (expBar) { expBar.maxValue = st.expToNext; expBar.value = GameManager.Instance.stats.exp; }
-        if (stageText) stageText.text = $"Stage {st.stageNumber:00}";
-        if (goldText) goldText.text = $"{GameManager.Instance.gold}";
+        var gm = GameManager.Instance; if (gm == null) return;
+        if (hpBar) { hpBar.maxValue = gm.stats.maxHp; hpBar.value = gm.stats.hp; }
+        if (mpBar) { mpBar.maxValue = gm.stats.maxMp; mpBar.value = gm.stats.mp; }
+        if (expBar) { expBar.maxValue = Mathf.Max(1, gm.stats.maxExp); expBar.value = Mathf.Min(gm.stats.exp, gm.stats.maxExp); }
+        if (stageText) stageText.text = $"Stage {gm.stats.stage:00}";
+        if (goldText) goldText.text = gm.gold.ToString();
     }
 }

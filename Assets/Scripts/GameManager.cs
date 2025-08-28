@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     public int gold = 0;
 
     public event Action OnStatsChanged;
+    public void RaiseStatsChanged() => OnStatsChanged?.Invoke();
 
     string _userKeyPrefix => $"{userId}";   // 사용자별 키 prefix
 
@@ -67,7 +68,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         if (Instance != null) { Destroy(gameObject); return; }
-        Instance = this;
+        Instance = this; DontDestroyOnLoad(gameObject);
         // 로그인에서 저장한 ID 복구
         userId = PlayerPrefs.GetString("userId", "Guest");
 
@@ -239,8 +240,4 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void RaiseStatsChanged()
-    {
-        OnStatsChanged?.Invoke();
-    }
 }

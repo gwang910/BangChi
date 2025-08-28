@@ -65,6 +65,12 @@ public class LoginManager : MonoBehaviour
         StartCoroutine(CoLogin(id, pw));
     }
 
+    IEnumerator DestroyAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Destroy(gameObject); // 2초 후 파괴
+    }
+
     IEnumerator CoLogin(string id, string pw)
     {
         ShowMsg("확인 중...");
@@ -74,9 +80,13 @@ public class LoginManager : MonoBehaviour
         if (ok)
         {
             ShowMsg("로그인 성공!");
-            // PlayerPrefs.SetString("userId", id); // 민감정보 저장 지양
+            PlayerPrefs.SetString("userId", id);
+            if (GameManager.Instance != null)
+                GameManager.Instance.userId = id;
             yield return new WaitForSeconds(0.15f);
             SceneManager.LoadScene("MainScene");
+            DontDestroyOnLoad(gameObject); // 장면이 바뀌어도 유지
+            StartCoroutine(DestroyAfterDelay(2f)); // 2초 뒤 파괴
         }
         else
         {
