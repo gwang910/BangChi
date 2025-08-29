@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 7f955e6fa86b50d42bcd76637f7bde7b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - worldFxPrefab: {instanceID: 0}
+  - worldClickSFX: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
