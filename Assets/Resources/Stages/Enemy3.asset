@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb3eee67f1ece2d4da19af1453de1e30, type: 3}
-  m_Name: Stage_2
+  m_Name: Enemy3
   m_EditorClassIdentifier: 
-  stageNumber: 1
-  enemyPrefab: {fileID: 7953549181026892944, guid: bd721086761a0db48815512cf0fd5556, type: 3}
-  expPerKill: 20
-  goldPerKill: 30
-  expToNext: 400
+  stageNumber: 3
+  enemyPrefab: {fileID: 7953549181026892944, guid: 5eec6e7b1faa0704784cebbc4dd95108, type: 3}
+  expPerKill: 35
+  goldPerKill: 50
+  expToNext: 700

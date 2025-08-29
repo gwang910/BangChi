@@ -24,6 +24,9 @@ public class GameManager : MonoBehaviour
     public StageConfigSO[] stages;          // 스테이지 설정 리스트
     public EnemySpawner spawner;
 
+    int CurIndex => Mathf.Clamp(stats.stage, 0, stages.Length - 1);
+    StageConfigSO CurCfg => stages[CurIndex];
+
     [Header("Runtime")]
     public string userId = "Guest";
     public PlayerStats stats = new PlayerStats();
@@ -79,6 +82,12 @@ public class GameManager : MonoBehaviour
         // 씬 안에 이미 Player가 있고 HUD가 구독하기 전에 오버플로를 방지
         OnStatsChanged?.Invoke();
         StartCoroutine(CoRegen());
+
+        // 현재 스테이지만큼은 해금으로 간주
+        RecordReachedStage(stats.stage);
+        // 시작 세팅
+        ApplyStage(stats.stage, firstTime: true);
+        RaiseStatsChanged();
     }
 
     System.Collections.IEnumerator CoRegen()
@@ -193,6 +202,10 @@ public class GameManager : MonoBehaviour
         {
             stats.exp -= stats.maxExp;
             stats.stage++;
+            ApplyStage(stats.stage, firstTime: false);
+
+            RecordReachedStage(stats.stage);
+
             var next = CurStage;
             stats.maxExp = next ? Mathf.Max(1, next.expToNext) : stats.maxExp;
         }
@@ -200,6 +213,7 @@ public class GameManager : MonoBehaviour
         OnStatsChanged?.Invoke();
         ReplaceEnemiesForCurrentStage();
         RecordReachedStage(stats.stage);  // 새로 도달한 스테이지 해금
+        RaiseStatsChanged();
     }
     public void TakeDamage(int dmg)
     {
@@ -251,11 +265,31 @@ public class GameManager : MonoBehaviour
     void ReplaceEnemiesForCurrentStage()
     {
         var st = CurStage;
-        if (st && st.enemyPrefab != null)
+        if (st == null || st.enemyPrefab == null) return;
+
+        // 인스펙터로 연결된 spawner가 있으면 그걸 쓰고,
+        // 없으면 싱글톤 Instance로 폴백
+        var s = spawner != null ? spawner : EnemySpawner.Instance;
+        if (s == null) return;
+
+        // 스테이지 중간 교체: 죽는 적부터 다음 프리팹으로 리스폰
+        s.SetNextPrefab(st.enemyPrefab);
+    }
+
+    // 스테이지 적용: 보상 수치, 요구치, 스폰너에 "다음 프리팹" 통보
+    void ApplyStage(int stage, bool firstTime)
+    {
+        var cfg = stages[Mathf.Clamp(stage, 0, stages.Length - 1)];
+
+        // 보상/요구치 갱신(원하면 저장)
+        stats.maxExp = cfg.expToNext;
+
+        // 첫 시작이면 바로 해당 프리팹으로 채우고,
+        // 그 이후(레벨업)는 "죽으면 다음 프리팹으로 리스폰"하도록 지시
+        if (spawner)
         {
-            // EnemySpawner가 프로젝트에 있다면 호출, 없어도 안전
-            try { EnemySpawner.ReplaceEnemies(st.enemyPrefab); }
-            catch { /* 없으면 무시 */ }
+            if (firstTime) spawner.ForceFillWith(cfg.enemyPrefab);
+            else spawner.SetNextPrefab(cfg.enemyPrefab);
         }
     }
 
